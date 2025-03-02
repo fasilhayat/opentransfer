@@ -32,13 +32,11 @@ CREATE TABLE IF NOT EXISTS open_transfer.company (
 CREATE TABLE IF NOT EXISTS open_transfer.policyholder (
     cpr VARCHAR(10) NOT NULL,
     address_id INT NOT NULL UNIQUE,  -- Ensures one-to-one relationship
-    company_id VARCHAR(8),
     firstname VARCHAR(35) NULL,
     middlename VARCHAR(35),
     lastname VARCHAR(35) NULL,
     CONSTRAINT policyholder_pkey PRIMARY KEY (cpr),
-    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES open_transfer.address(id) ON DELETE CASCADE,
-    CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES open_transfer.company(cvr)
+    CONSTRAINT fk_address_id FOREIGN KEY (address_id) REFERENCES open_transfer.address(id) ON DELETE CASCADE
 );
 
 -- Taxation Scheme Table
@@ -140,11 +138,11 @@ VALUES
     ('67890123', 12, 'Danica Pension');
 
 -- Insert data into policyholder
-INSERT INTO open_transfer.policyholder (cpr, address_id, company_id, firstname, middlename, lastname)
+INSERT INTO open_transfer.policyholder (cpr, address_id, firstname, middlename, lastname)
 VALUES 
-    ('1234567890', 1, '12567890', 'Anders', 'M.', 'Jensen'),
-    ('2345678901', 2, '87654321', 'Lars', NULL, 'Hansen'),
-    ('2309988765', 3, '98765432', 'Frederik', 'K.', 'Jensen');
+    ('1234567890', 1, 'Anders', 'M.', 'Jensen'),
+    ('2345678901', 2, 'Lars', NULL, 'Hansen'),
+    ('2309988765', 3, 'Frederik', 'K.', 'Jensen');
 
 -- Insert data into pension_scheme
 INSERT INTO open_transfer.pension_scheme (taxation_scheme_id, pension_type, establishment_date)
