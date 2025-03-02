@@ -12,7 +12,7 @@ CONTAINER_DATA_DIR=$(CURDIR)/$(CONTAINER_DATA_FOLDER)/postgres-data
 DOCKER_COMPOSE_FILE=$(CURDIR)/docker-compose.yml
 
 # Build the Docker image
-open_transfer-build:
+ot-build:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) build
 
 # Run the PostgreSQL container using Docker Compose
@@ -20,22 +20,22 @@ open_transfer-run:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
 
 # Stop and remove the container using Docker Compose
-open_transfer-clean:
+ot-clean:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 	rmdir /S /Q $(CONTAINER_DATA_FOLDER)
 
 # Remove the database volume (WARNING: Deletes all data!)
-open_transfer-clean-volume:
+ot-clean-volume:
 	docker volume rm opentransfer-db
 
 # Connect to PostgreSQL inside the running container
-open_transfer-connect:
+ot-connect:
 	docker exec -it $(DB_CONTAINER) psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
 
 # View logs from the PostgreSQL container
-open_transfer-logs:
+ot-logs:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) logs -f
 
 # Restart the database container using Docker Compose
-open_transfer-restart:
+ot-restart:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down && docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
