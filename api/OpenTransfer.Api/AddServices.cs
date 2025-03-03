@@ -1,7 +1,11 @@
-﻿using Microsoft.OpenApi.Models;
-using OpenTransfer.Api.Infrastructure.Data;
+﻿using OpenTransfer.Api.Application.Services;
+using OpenTransfer.Api.Core.Interfaces;
+using OpenTransfer.Api.Infrastructure.Repositories;
 
 namespace OpenTransfer.Api;
+
+using Microsoft.OpenApi.Models;
+using Infrastructure.Data;
 
 public static class ServiceCollectionExtensions
 {
@@ -16,18 +20,9 @@ public static class ServiceCollectionExtensions
         // DbContext registration for dependency injection
         services.AddScoped(_ => new DbContext(configuration.GetConnectionString("OpenTransferConnection")));
 
-        //// Register repositories and service classes for dependency injection
-        //services.AddScoped<IIdentRepository, IdentRepository>();
-        //services.AddScoped<IdentService>();
-
-        //services.AddScoped<IApplikationRepository, ApplikationRepository>();
-        //services.AddScoped<ApplikationService>();
-
-        //services.AddScoped<IEjerkundeRepository, EjerkundeRepository>();
-        //services.AddScoped<EjerkundeService>();
-
-        //services.AddScoped<IStatistikRepository, StatistikRepository>();
-        //services.AddScoped<StatistikService>();
+        // Register repositories and service classes for dependency injection
+        services.AddScoped<IApplicationRepository, ApplicationRepository>();
+        services.AddScoped<ApplicationService>();
 
         return services;
     }

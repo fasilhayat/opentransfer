@@ -1,50 +1,48 @@
 using OpenTransfer.Api;
+using System.Globalization;
+using OpenTransfer.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 // Add Services
 builder.Services.AddServices(builder.Configuration);
 builder.Services.AddAuthorization();
 
-var app = builder.Build();
+var cultureConfig = builder.Configuration.GetSection("CultureSettings");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var cultureInfo = new CultureInfo(cultureConfig["Culture"]!)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    DateTimeFormat =
+    {
+        ShortDatePattern = cultureConfig["ShortDatePattern"]!,
+        LongDatePattern = cultureConfig["LongDatePattern"]!
+    }
 };
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+// Apply the culture globally
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+// Add Swagger
+if (builder.Environment.IsDevelopment())
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    builder.Services.AddSwaggerConfiguration(builder.Configuration);
 }
+
+var app = builder.Build();
+
+// Use Middlewares
+app.UseMiddlewareConfiguration(app.Environment, builder.Configuration);
+
+
+// Add routing middleware
+app.UseRouting();
+app.UseAuthorization();
+
+// Map endpoints
+app.MapApplikationEndpoints();
+
+
+// Start the application
+app.Run();
