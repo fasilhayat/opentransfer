@@ -1,9 +1,15 @@
+using OpenTransfer.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Services
+builder.Services.AddServices(builder.Configuration);
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
