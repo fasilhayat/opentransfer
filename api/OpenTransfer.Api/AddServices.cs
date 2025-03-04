@@ -1,11 +1,10 @@
-﻿using OpenTransfer.Api.Application.Services;
-using OpenTransfer.Api.Core.Interfaces;
-using OpenTransfer.Api.Infrastructure.Repositories;
+﻿namespace OpenTransfer.Api;
 
-namespace OpenTransfer.Api;
-
-using Microsoft.OpenApi.Models;
+using Application.Services;
+using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Microsoft.OpenApi.Models;
 
 public static class ServiceCollectionExtensions
 {
